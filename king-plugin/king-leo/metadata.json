@@ -1,0 +1,11 @@
+{
+	"name": "AI King Leonardo",
+	"description": "King AI image creator plugin",
+	"version": "3.6",
+	"date": "2023",
+	"author": "KingThemes",
+	"author_uri": "http://www.kingthemes.net",
+	"license": "GPLv2",
+	"min_q2a": "1",
+	"load_order": "after_db_init"
+}

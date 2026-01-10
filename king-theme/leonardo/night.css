@@ -1,0 +1,1006 @@
+.king-lnight body {
+  background-color: #0c0b0d;
+  color: #8a8997;
+}
+
+.king-lnight td {
+  color: #8a8997;
+}
+
+.king-lnight .leo-slider::-webkit-slider-thumb {
+  background-color: #fff;
+}
+
+.king-lnight .leo-slider::-moz-range-thumb {
+  background-color: #fff;
+}
+
+.king-lnight .king-nav-head-link {
+  color: #ced0d9;
+}
+
+.king-lnight .aisubmit {
+  background-color: #fff;
+  color: #0c0b0d;
+}
+
+.king-lnight .king-nav-head-list:hover .king-nav-head-link {
+  color: #ced0d9;
+}
+
+.king-lnight .king-nav-head-list .king-nav-head-link:hover {
+  color: #fff;
+}
+
+.king-lnight .king-search-field {
+  background-color: #0f0f11;
+  border-color: #24242b;
+}
+
+.king-lnight .kingai-input {
+  box-shadow: 0 2px 16px 2px rgba(0, 0, 0);
+  background-color: #151419;
+}
+
+.king-lnight .kingai-ext {
+  background-color: #151419;
+}
+
+.king-lnight .search-disc a {
+  color: #fff;
+}
+
+.king-lnight .ai-create .king-part-form {
+  background-color: #151419;
+}
+
+.king-lnight .king-template-leoai .snote {
+  background-color: #0c0b0d;
+}
+
+.king-lnight .kingai-ext select {
+  background-color: #0f0f11;
+  border-color: #24242b;
+  color: #fff;
+}
+
+.king-lnight .kingai-ext .nav-tabs li a {
+  color: #fff;
+}
+
+.king-lnight .kingai-ext .nav-tabs li.active a {
+  color: #333;
+}
+
+.king-lnight .ailimit {
+  background-color: #0c0b0d;
+  color: #fff;
+}
+
+.king-lnight .ailimits {
+  background-color: #24242b;
+}
+
+.king-lnight .ailimits span {
+  background-color: #fff;
+}
+
+.king-lnight .kingai-ext label {
+  background-color: #0c0b0d;
+  color: #fff;
+  border: 0;
+}
+
+.king-lnight .kingai-ext input:checked + label {
+  background-color: #fff;
+  color: #0c0b0d;
+}
+
+.king-lnight .membership-plan {
+  border-color: #333;
+}
+
+.king-lnight .king-nav-sub-link {
+  background-color: #0c0b0d;
+  color: #fff;
+}
+
+.king-lnight .king-nav-sub-selected,
+.king-lnight .king-nav-sub-link:hover {
+  background-color: #fff;
+  color: #0c0b0d;
+}
+
+.king-lnight .king-form-light-button,
+.king-lnight .king-form-light-hover {
+  background-color: inherit;
+}
+
+.king-lnight .king-template-user .king-form-wide-data,
+.king-lnight .king-template-user .king-form-wide-label {
+  border-bottom: 1px solid #000;
+}
+
+.king-lnight .user-box-in h3 {
+  color: #fff;
+}
+
+.king-lnight .king-header {
+  background-color: #000000c4;
+  box-shadow: inherit;
+}
+
+.king-lnight .reglink,
+.king-lnight .ntfy-event-nill,
+.king-lnight .king-dots {
+  color: #fff !important;
+}
+
+.king-lnight .king-left-toggle:before,
+.king-lnight .king-left-toggle:after,
+.king-lnight .left-toggle-line {
+  background-color: #fff;
+}
+
+.king-lnight .header-right ul li span,
+.king-lnight .reglink,
+.king-lnight .king-rlater {
+  background-color: #151419;
+  color: #fff;
+}
+
+.king-lnight .king-nav-headmenu-list li a {
+  color: #d7d7d7;
+}
+
+.king-lnight .box-in {
+  background-color: #1a1a1a;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.72);
+}
+
+.king-lnight .topname a {
+  color: #fff;
+}
+
+.king-lnight .king-nothumb {
+  background-color: #282828;
+}
+
+.king-lnight .king-search {
+  background-color: #1a1a1a;
+  border: solid 1px #1a1a1a;
+}
+
+.king-lnight input[type="text"]:focus {
+  color: #fff;
+}
+
+.king-lnight .king-rate,
+.king-lnight .share-toggle {
+  color: #fff;
+  background-color: #2e2e2e;
+}
+
+.king-lnight .king-vote-count,
+.king-lnight .king-favoriting:after {
+  color: #fff;
+}
+
+.king-lnight .king-fav {
+  background-color: #2e2e2e;
+}
+
+
+
+.king-lnight .king-template-question .pheader,
+.king-lnight .pboxes .king-user-link {
+  color: #fff;
+}
+
+.king-lnight .king-lnightb:after {
+  background-color: #000000;
+}
+
+.king-lnight #copyp,
+.king-lnight .ai-w {
+  box-shadow: 0px 0px 0px 1px #646373 inset;
+  color: #646373;
+}
+
+.king-lnight .king-tag-link {
+  color: #646373;
+  background-color: #19171d;
+}
+
+.king-lnight #ltoggle:before,
+.king-lnight #ltoggle:after {
+  background-color: #fff;
+}
+
+.king-lnight .king-lnightb {
+  background-color: #151419;
+  color: #646373;
+}
+
+.king-lnight .king-q-view-buttons input {
+  -webkit-box-shadow: 0px 0px 0px 1px #646373 inset;
+  box-shadow: 0px 0px 0px 1px #646373 inset;
+  color: #646373;
+}
+
+.king-lnight .ai-result-up span {
+  background-color: #151419;
+  color: #fff;
+}
+
+.king-lnight .nav-tabs,
+.king-lnight .videoembedup {
+  background-color: #000;
+}
+
+.king-lnight #videoembed {
+  background-color: #000000;
+}
+
+.king-lnight .king-form-tall-text,
+.king-lnight .king-form-tall-select,
+.king-lnight .modal-input {
+  background-color: #0f0f11;
+  border-color: #24242b;
+  color: #fff;
+}
+
+.king-lnight .commentmain {
+  background-color: #0f0f11;
+}
+
+.king-lnight .commentmain:after {
+  border-right-color: #202020;
+}
+
+.king-lnight .a-alt .king-vote-count,
+.king-lnight .king-a-list .king-user-link {
+  color: #fff;
+}
+
+.king-lnight .king-body-search {
+  background-image: linear-gradient(
+      0deg,
+      rgba(12, 11, 13, 0.92),
+      rgba(12, 11, 13, 0.72)
+    ),
+    linear-gradient(
+      180.08deg,
+      rgba(12, 11, 13, 0.12) 33.15%,
+      rgba(12, 11, 13, 0.124292) 38.05%,
+      rgba(12, 11, 13, 0.13706) 42.93%,
+      rgba(12, 11, 13, 0.15814) 47.77%,
+      rgba(12, 11, 13, 0.187369) 52.57%,
+      rgba(12, 11, 13, 0.224583) 57.31%,
+      rgba(12, 11, 13, 0.269619) 61.99%,
+      rgba(12, 11, 13, 0.322315) 66.6%,
+      rgba(12, 11, 13, 0.382506) 71.14%,
+      rgba(12, 11, 13, 0.450029) 75.58%,
+      rgba(12, 11, 13, 0.524721) 79.93%,
+      rgba(12, 11, 13, 0.606419) 84.17%,
+      rgba(12, 11, 13, 0.694959) 88.3%,
+      rgba(12, 11, 13, 0.790178) 92.31%,
+      rgba(12, 11, 13, 0.891913) 96.19%,
+      #0c0b0d 100%
+    );
+}
+
+.king-lnight .king-c-list-item {
+  background-color: #101010;
+}
+
+.king-lnight .entry-content {
+  color: #a5a5a5;
+}
+
+.king-lnight .tagcloud h2,
+.king-lnight .ilgilib,
+.king-lnight .king-sidebar {
+  background-color: #1a1a1a;
+  color: #fff;
+}
+
+.king-lnight .king-nav-cat-all a {
+  background-color: #1a1a1a;
+  border-color: #202020;
+  color: #fff;
+}
+
+.king-lnight .king-nav-cat-link {
+  border-color: #202020;
+  color: #d7d7d7;
+}
+
+.king-lnight .king-footer {
+  color: #d7d7d7;
+  background-color: #151419;
+}
+
+.king-lnight .postmeta {
+  background-color: #19171d;
+  color: #646373;
+}
+
+.king-lnight .king-footer a {
+  color: #fff;
+}
+
+.king-lnight .socialicons li a {
+  border: 1px solid #373838;
+}
+
+.king-lnight .king-nav-footer-list {
+  column-rule: 1px solid #373838;
+}
+
+.king-lnight .leftmenu {
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+  background-color: #000000c4;
+}
+
+.king-lnight .king-nav-main-link {
+  color: #646373;
+}
+
+.king-lnight .king-nav-main-selected {
+  color: #fff;
+}
+
+.king-lnight .usrname .king-user-link {
+  color: #fff;
+}
+
+.king-lnight .king-userpnl {
+  border-bottom: 1px solid #151419;
+}
+
+.king-lnight .king-suggest-next {
+  background-color: #191919;
+}
+
+.king-lnight .king-cat-main,
+.king-lnight .king-switch,
+.king-lnight .king-dropdown {
+  background-color: #151515;
+}
+
+.king-lnight #btn-switch .btn-default label {
+  color: #414141;
+}
+
+.king-lnight .kingnight {
+  background-color: #414141;
+}
+
+.king-lnight .king-nav-user-item a:hover {
+  background-color: #000000;
+  color: #fff;
+}
+
+.king-lnight .tagcloud a {
+  color: #646373;
+  background-color: #19171d;
+}
+
+.king-lnight #checkbox-menu2:checked + header .modal-backdrop,
+.king-lnight .modal-dialog {
+  background-color: rgba(0, 0, 0, 0.93);
+}
+
+.king-lnight #king-userid,
+.king-lnight #king-password,
+.king-lnight .ajax-upload-dragdrop,
+.king-lnight .imgprev,
+.king-lnight .inputprev-span {
+  color: #fff;
+  background-color: #242424;
+  border: 2px solid rgb(52, 52, 52);
+}
+
+.king-lnight .ajax-file-upload {
+  background-color: #1a1a1a;
+}
+
+.king-lnight .vidtab {
+  background-color: #202020;
+}
+
+.king-lnight .king-template-video .king-form-tall-data .vidtab .active a,
+.king-lnight .vidtab li a:hover,
+.king-lnight label.featured-image-upload {
+  background-color: #000;
+}
+
+.king-lnight .mce-content-body {
+  background-color: #000000;
+  border: solid 1px #000000;
+  color: #fff;
+}
+
+.king-lnight .king-nav-kingsub-list {
+  background-color: #19171d;
+  margin: 20px auto 20px;
+}
+
+.king-lnight .king-edit-button {
+  background-color: #000;
+  color: #fff;
+}
+
+.king-lnight .ai-content {
+  background-color: #19171d;
+  color: #fff;
+}
+
+.king-lnight .king-submit-second {
+  background-color: #343434;
+}
+
+.king-lnight .king-submit-second a {
+  background-color: #1a1a1a;
+}
+
+.king-lnight .widget-title,
+.king-lnight .king-template-user .king-part-form-activity h2,
+.king-lnight .king-part-form-password h2,
+.king-lnight .king-part-form-theme-switch h2 {
+  background-color: #151419;
+  color: #fff;
+}
+
+.king-lnight .king-template-user .king-form-wide-label {
+  background-color: #151515;
+}
+
+.king-lnight .king-user-posts .see-all {
+  background-color: #1a1a1a;
+}
+
+.king-lnight .king-user-activities ul li:hover {
+  background-color: #1a1a1a;
+}
+
+.king-lnight .king-user-activities ul li {
+  border-bottom: 1px solid #2e2e2e;
+}
+
+.king-lnight .king-activity-item .what {
+  background-color: #2e2e2e;
+}
+
+.king-lnight .king-user-activities {
+  color: #3f3f3f;
+}
+
+.king-lnight .king-message-item {
+  border-bottom: 1px solid #000000;
+  background: #171717;
+}
+
+.king-lnight .results-p span {
+  background: #000000;
+}
+
+.king-lnight .king-part-ranking-users h2 {
+  background-color: #1a1a1a;
+  border-color: #202020;
+  color: #fff;
+}
+
+.king-lnight .king-top-users-label {
+  background-color: #000000;
+  border: 1px solid #2e2e2e;
+}
+
+.king-lnight .king-top-users-score {
+  background-color: #2e2e2e;
+}
+
+.king-lnight .king-follow span strong,
+.king-lnight .king-profile-usrname {
+  color: #fff;
+}
+
+.king-lnight .king-form-tall-select {
+  color: #fff;
+}
+
+.king-lnight .king-post-upbtn a,
+.king-lnight .cats-toggle {
+  color: #fff;
+}
+
+.king-lnight .ads {
+  background-color: #151419;
+}
+
+.king-lnight .king-nothumb {
+  background: #000;
+}
+
+.king-lnight .head-title {
+  color: #fff;
+}
+
+.king-lnight .featured-post {
+  background-color: #262626;
+}
+
+.king-lnight .share-link,
+.king-lnight .king-vote-count,
+.king-lnight .king-favorite-button,
+.king-lnight .king-favorite-hover,
+.king-lnight .king-unfavorite-button,
+.king-lnight .king-unfavorite-hover,
+.king-lnight .king-add-slider{
+  background-color: #0c0b0d;
+  color: #fff;
+  box-shadow: inherit;
+  border-color: #2e2e2e;
+}
+
+.king-lnight .king-vote-buttons-netup button,
+.king-lnight .king-vote-buttons-netdown button {
+  color: #fff;
+}
+
+.king-lnight .list-title {
+  color: #fff;
+}
+
+.king-lnight .king-related {
+  background-color: #151419;
+}
+
+.king-lnight .king-related h3 {
+  color: #fff;
+}
+
+.king-lnight .king-modal-content {
+  background-color: #151419;
+}
+
+.king-lnight .king-logo .king-logon {
+  display: block;
+}
+
+.king-lnight .king-logo .king-logol {
+  display: none;
+}
+
+.king-lnight .king-poll-file {
+  background-color: #000000;
+  border-color: #2e2e2e;
+}
+
+.king-lnight .leo-nav {
+  background-color: #000000;
+}
+
+.king-lnight .membership-plan {
+  color: #fff;
+}
+
+.king-lnight .king-body-search h1 {
+  color: #fff;
+}
+
+.king-lnight .membership-up span {
+  background-color: #000;
+  border: 1px solid #000;
+}
+
+.king-lnight .ai-submit,
+.king-lnight .promter i {
+  background-color: #fff;
+  color: #333;
+}
+
+.king-lnight .ai-submit i {
+  color: #333;
+}
+
+.king-lnight .king-membership.step-2 .membership-up span:nth-child(2),
+.king-lnight .king-membership.step-3 .membership-up span:nth-child(2),
+.king-lnight .king-membership.step-3 .membership-up span:nth-child(3) {
+  background-color: #fff;
+  color: #333;
+}
+
+.king-lnight .membership-up span.active {
+  background-color: #fff;
+  color: #333;
+}
+
+.king-lnight .king-main.one-page .king-inner {
+  background-color: #0c0b0d;
+}
+
+.king-lnight .king-template-plugin .king-main.one-page .king-inner {
+  background-color: inherit;
+}
+
+.king-lnight .inleft .pbutton,
+.king-lnight .king-list .inleft {
+  background-color: #000000;
+  color: #fff;
+}
+
+.king-lnight .kingp-leftin,
+.king-lnight .tblack {
+  background-color: #000000;
+  color: #fff;
+}
+
+.king-lnight .king-poll-grid {
+  border-color: #2e2e2e;
+}
+
+.king-lnight .king-poll-grid.paddnew {
+  border-color: #fff;
+  color: #fff;
+}
+
+.king-lnight .king-list {
+  background-color: #262525;
+}
+
+.king-lnight .king-dropdown2 {
+  background-color: #151515;
+}
+
+.king-lnight .king-dropdown2 a {
+  color: #646373;
+}
+
+.king-lnight .king-dropdown2 a:hover {
+  background-color: rgb(0 0 0 / 59%);
+}
+
+.king-lnight .king-dropdown2 .arrow {
+  border-bottom-color: #151515;
+}
+
+.king-lnight .king-polls li .poll-item,
+.king-lnight .king-polls li .poll-item:hover {
+  background-color: #000;
+  border-color: #000;
+  color: #fff;
+}
+
+.king-lnight .king-q-item-main,
+.king-lnight .simple-posts,
+.king-lnight .king-featured-grid .featured-posts,
+.king-lnight .simple-post {
+  background-color: #151419;
+}
+
+.king-lnight .king-widget-wb,
+.king-lnight .king-q-view,
+.king-lnight .pboxes,
+.king-lnight .maincom,
+.king-lnight .user-box,
+.king-lnight .king-video {
+  background-color: #151419;
+}
+
+.king-lnight .king-nav-head-list li a:hover,
+.king-lnight .king-nav-head-list li a.king-nav-head-selected {
+  color: #fff;
+}
+
+.king-lnight .menutoggle:hover {
+  background-color: #151419;
+}
+
+.king-lnight .king-mega-menu,
+.king-lnight .king-nav-headmenu-list {
+  background-color: #151419;
+}
+
+.king-lnight .post-featured-img {
+  background-color: #151419;
+}
+
+.king-lnight .king-q-item-title a,
+.king-lnight .king-form-tall-label {
+  color: #e2e1e3;
+}
+
+.king-lnight .king-post-upbtn a {
+  background-color: #0000005c;
+}
+
+.king-lnight .leftmenu-left span a {
+  background-color: #151419;
+  color: #fff;
+}
+
+.king-lnight .liveresults a {
+  color: #fff;
+  border-color: #333;
+}
+
+.king-lnight .mfp-content {
+  background-color: #151419;
+}
+
+.king-lnight .social-share a,
+.king-lnight .social-share h3 {
+  color: #fff;
+}
+
+.king-lnight .king-gallery-zoom .mfp-content {
+  background-color: inherit;
+}
+
+.king-lnight .king-dropdown .king-nav-user-item a {
+  background-color: #151419;
+  border-color: #151419;
+}
+
+.king-lnight .nfyWrap,
+.king-lnight .nfyWrap .nfyContainer {
+  background-color: #151419;
+}
+
+.king-lnight .nfyWrap .itemBox:hover {
+  background-color: #151419;
+}
+
+.king-lnight .itemBox {
+  background-color: #151419;
+  border-bottom: 1px solid #000;
+}
+
+.king-lnight .nfyWrap .nfyItemLine a {
+  color: #fff;
+}
+
+.king-lnight .pheader {
+  color: #fff;
+}
+
+.king-lnight .prev-next a {
+  color: #fff;
+}
+
+.king-lnight .king-message-item {
+  color: #efefef;
+}
+
+.king-lnight .king-pm-item {
+  background-color: #0c0b0d;
+}
+
+.king-lnight .user-box-links a {
+  background-color: #000;
+  color: #fff;
+}
+
+.king-lnight .reactions li {
+  background-color: #363239;
+}
+
+.king-lnight .reaction {
+  background-color: #151419;
+}
+
+.king-lnight .king-next-q,
+.king-lnight .king-prev-q {
+  background-color: #151419;
+}
+
+.king-lnight .reaction-percent {
+  color: #fff;
+}
+
+.king-lnight .editusers-table tbody {
+  color: #fff;
+}
+
+.king-lnight .kingeditli:nth-child(2n + 0),
+.king-lnight .kingeditli:hover {
+  background-color: #151419;
+}
+
+.king-lnight .king-form-wide-note {
+  color: #fff;
+}
+
+.king-lnight .king-form-wide-data {
+  color: #fff;
+}
+
+.king-lnight label input,
+.king-lnight .king-form-wide-label,
+.king-lnight .king-form-wide-label input {
+  color: #b0b7bb;
+}
+
+.king-lnight .editusers-table td {
+  border-right: 1px solid #333;
+}
+
+.king-lnight .discover-boxes a {
+  background-color: #151419;
+}
+
+.king-lnight .wdgt-li {
+  background-color: #363239;
+  color: #fff;
+}
+
+.king-lnight .king-p-who a {
+  color: #ffffff;
+}
+
+.king-lnight .shorts-nav button {
+  background-color: #19181d;
+  color: #fff;
+}
+
+.king-lnight .leo-range {
+  color: #fff;
+}
+
+.king-lnight .short-video {
+  border: 8px solid #19181d;
+}
+
+.king-lnight .king-dropdown h3 {
+  color: #fff;
+}
+
+.king-lnight .modal-reglink {
+  background-color: #19171d;
+}
+
+.king-lnight .load-nomore {
+  background-color: #363239;
+}
+
+.king-lnight .bm-content a {
+  color: #fff;
+}
+
+.king-lnight .tresult {
+  background-color: #1e1e1e;
+}
+
+.king-lnight .quiz-share {
+  background-color: #0c0b0d;
+}
+
+.king-lnight .kingai-input,
+.king-lnight .kingai-ext,
+.king-lnight .ai-result {
+  background-color: #151419;
+  color: #fff;
+  border-color: #151419;
+}
+
+.king-lnight .nav-tabs,
+.king-lnight .ai-published,
+.king-lnight .ailabel {
+  background-color: #000;
+  color: #fff;
+  border-color: #000;
+}
+
+.king-lnight .ai-submit,
+.king-lnight .kingai-ext input:checked + label,
+.king-lnight .aipublish {
+  background-color: #fff;
+  color: #000;
+}
+
+.king-lnight .nav-tabs li a {
+  color: #fff;
+}
+
+.king-lnight .nav-tabs .active a {
+  color: #000;
+}
+
+.king-lnight .kingai-ext select {
+  background-color: #0f0f11;
+  border-color: #24242b;
+  color: #fff;
+}
+
+.king-lnight .ai-result-up span {
+  background-color: #24242b;
+  color: #fff;
+  border: 1px solid #24242b;
+}
+
+.king-lnight .membership-up span {
+  background-color: #24242b;
+  border: inherit;
+}
+
+.king-lnight .king-time-select {
+  box-shadow: 0px 0px 0px 1px #333 inset;
+  color: #7a787b;
+}
+
+.king-lnight .king-flter {
+  background-color: #0c0b0d;
+  color: #fff;
+}
+
+.king-lnight .kingcre-input {
+  background-color: #24242b;
+}
+
+.king-lnight .king-secondnav {
+  background-color: #000000;
+}
+
+.king-lnight .king-time-drop {
+  background-color: #000;
+}
+
+.king-lnight .king-time-drop a:hover,
+.king-lnight .king-time-drop a.active {
+  background-color: #151419;
+  color: #fff;
+}
+
+.king-lnight .king-time-drop a {
+  color: #fff;
+}
+
+.king-lnight .kingai-aski {
+  background-color: #0c0b0d;
+  border-color: #000;
+}
+
+.king-lnight .ai-select {
+  border: 1px solid #000;
+  background-color: #151419;
+  color: #fff;
+}
+
+.king-lnight .aiinput {
+  color: #fff;
+}
+.king-lnight .ai-create .king-part-form .king-form-tall-table {
+  background-color: #151419;
+  color: #fff;
+}
+.king-lnight .nopost {
+  background-color: #151419;
+  color: #fff;
+}
+.king-lnight .aiinput {
+   background-color: #151419;
+}
+.king-lnight .king-sbutton {
+background-color: #000000;
+    border-color: #24242b;
+  color:#fff;
+}
+
+.king-lnight .king-dropdownc {
+  background-color: #000000;
+}
+.king-lnight .cradio input[type="radio"]:checked + span,
+.king-lnight .cradio span:hover {
+    background-color: #151419;
+}
+.king-night .king-form-tall-label .checkbox .slider
+ {
+    background-color: #7a787b;
+}
+
+.king-night .king-form-tall-label .checkbox input:checked + .slider {
+    background-color: #e7e7e9;
+}
