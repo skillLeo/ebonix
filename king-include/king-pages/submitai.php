@@ -13,11 +13,15 @@ GNU General Public License for more details.
 More about this license: LICENCE.html
  */
 
-if (!defined('QA_VERSION')) {
-	// don't allow this page to be requested directly from browser
-	header('Location: ../');
-	exit;
+ if (!defined('QA_VERSION')) {
+    header('Location: ../');
+    exit;
 }
+
+// Add these lines
+set_time_limit(300); // 5 minutes
+ini_set('max_execution_time', 300);
+ini_set('memory_limit', '512M');
 
 require_once QA_INCLUDE_DIR.'king-app/format.php';
 require_once QA_INCLUDE_DIR.'king-app/limits.php';
@@ -372,6 +376,96 @@ $cont .= '<button type="button" id="ai-submit" class="ai-submit" onclick="return
 $cont .= $context;
 $cont .= '</div>';
 $qa_content['custom'] = $cont;	
+$qa_content['custom'] .= '
+<script>
+(function(){
+	function kingGetReusePayload(){
+		var raw = null;
+		try{ raw = sessionStorage.getItem("king_ai_reuse"); }catch(e){}
+		if(!raw) return null;
+		try{
+			var data = JSON.parse(raw);
+			try{ sessionStorage.removeItem("king_ai_reuse"); }catch(e){}
+			return data;
+		}catch(e){
+			return null;
+		}
+	}
+
+	function kingSetTextarea(id, val){
+		var el = document.getElementById(id);
+		if(!el) return;
+		el.value = val || "";
+		if(typeof adjustHeight === "function"){ try{ adjustHeight(el); }catch(e){} }
+	}
+
+	function kingSelectRadio(name, value){
+		if(!value) return false;
+		var input = document.querySelector(\'input[name="\' + name + \'"][value="\' + CSS.escape(value) + \'"]\');
+		if(!input) return false;
+
+		// if option exists but is hidden for this model, skip
+		var label = input.closest("label");
+		if(label && label.offsetParent === null) return false;
+
+		input.checked = true;
+		// trigger click so any existing js updates UI
+		try{ input.dispatchEvent(new Event("change", {bubbles:true})); }catch(e){}
+		try{ input.click(); }catch(e){}
+		return true;
+	}
+
+	function kingSetImageModel(model){
+		if(!model) return;
+		var input = document.querySelector(\'input[name="aimodel"][value="\' + CSS.escape(model) + \'"]\');
+		if(!input) return;
+
+		input.checked = true;
+		try{ input.dispatchEvent(new Event("change", {bubbles:true})); }catch(e){}
+		try{ input.click(); }catch(e){}
+
+		// update dropdown button text
+		var btn = document.getElementById("aimodelbtn");
+		if(btn){
+			var lbl = input.closest("label");
+			if(lbl){
+				var t = (lbl.innerText || lbl.textContent || "").trim();
+				if(t) btn.innerText = t;
+			}
+		}
+
+		// update container class so css rules apply
+		var ch = document.getElementById("chclass");
+		if(ch) ch.className = model;
+	}
+
+	document.addEventListener("DOMContentLoaded", function(){
+		var payload = kingGetReusePayload();
+		if(!payload) return;
+
+		// only apply for image page
+		if(payload.isVideo && parseInt(payload.isVideo, 10) === 1) return;
+
+		if(payload.prompt) kingSetTextarea("ai-box", payload.prompt);
+
+		if(payload.model) kingSetImageModel(payload.model);
+
+		// size value on image page is like 1024x1024 etc
+		if(payload.size) kingSelectRadio("aisize", payload.size);
+
+		// style optional
+		if(payload.style) kingSelectRadio("aistyle", payload.style);
+
+		// negative prompt optional
+		if(payload.nprompt) kingSetTextarea("n_prompt", payload.nprompt);
+
+		var box = document.getElementById("ai-box");
+		if(box){ try{ box.focus(); }catch(e){} }
+	});
+})();
+</script>
+';
+
 $qa_content['form'] = array(
 	'tags'    => 'name="ask" method="post" action="' . qa_self_html() . '" id="ai-form"',
 

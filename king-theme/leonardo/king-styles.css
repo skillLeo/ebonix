@@ -7943,3 +7943,15 @@ font-size:16px;
 .king-q-item-main:hover .king-avideo {
     display: flex;
 }
+
+
+
+
+
+.king-generate-btn{
+	margin-top:10px;
+	padding:10px 14px;
+	border-radius:12px;
+	border:0;
+	cursor:pointer;
+}

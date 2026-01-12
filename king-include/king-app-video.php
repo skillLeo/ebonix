@@ -457,113 +457,174 @@ function king_convert_to_webp($sourcePath, $destPath, $quality = 90) {
 }
 
 function king_urlupload($imageUrl, $waterk = null, $resize = null) {
-	$opts = ['http' => ['header' => "User-Agent:MyAgent/1.0\r\n"]];
-	$context = stream_context_create($opts);
-	$fileContent = @file_get_contents($imageUrl, false, $context);
-	if ($fileContent === false) return false;
+    // Increase timeout for this operation
+    set_time_limit(180);
+    
+    $opts = ['http' => [
+        'header' => "User-Agent:MyAgent/1.0\r\n",
+        'timeout' => 60 // Add timeout
+    ]];
+    $context = stream_context_create($opts);
+    
+    // Add timeout and error handling
+    $fileContent = @file_get_contents($imageUrl, false, $context);
+    if ($fileContent === false) {
+        error_log("Failed to download image from: " . $imageUrl);
+        return false;
+    }
 
-	// Detect file extension
-	$ext = strtolower(pathinfo(parse_url($imageUrl, PHP_URL_PATH), PATHINFO_EXTENSION));
-	$isVideo = ($ext === 'mp4');
-	$format = $isVideo ? 'mp4' : 'webp';
-	$filename = uniqid('', true) . '.' . $format;
+    // Detect file extension
+    $ext = strtolower(pathinfo(parse_url($imageUrl, PHP_URL_PATH), PATHINFO_EXTENSION));
+    $isVideo = ($ext === 'mp4');
+    $format = $isVideo ? 'mp4' : 'webp';
+    $filename = uniqid('', true) . '.' . $format;
 
-	// Prepare upload path
-	$folder = 'uploads/' . date("Y") . '/' . date("m") . '/';
-	$destDir = QA_INCLUDE_DIR . $folder;
-	if (!is_dir($destDir)) mkdir($destDir, 0777, true);
-	$localPath = $destDir . $filename;
+    // Prepare upload path
+    $folder = 'uploads/' . date("Y") . '/' . date("m") . '/';
+    $destDir = QA_INCLUDE_DIR . $folder;
+    if (!is_dir($destDir)) {
+        mkdir($destDir, 0777, true);
+    }
+    $localPath = $destDir . $filename;
 
-	// Limit file size (50MB)
-	$maxFileSize = 50 * 1024 * 1024;
-	if (strlen($fileContent) > $maxFileSize) {
-		return false;
-	}
+    // Limit file size (50MB)
+    $maxFileSize = 50 * 1024 * 1024;
+    if (strlen($fileContent) > $maxFileSize) {
+        error_log("File too large: " . strlen($fileContent) . " bytes");
+        return false;
+    }
 
-	// Write securely
-	if (@file_put_contents($localPath, $fileContent, LOCK_EX) === false || !file_exists($localPath)) {
-		return false;
-	}
+    // Write securely
+    if (@file_put_contents($localPath, $fileContent, LOCK_EX) === false || !file_exists($localPath)) {
+        error_log("Failed to write file: " . $localPath);
+        return false;
+    }
 
-	// Validate MIME type
-	$finfo = finfo_open(FILEINFO_MIME_TYPE);
-	$mimeType = finfo_file($finfo, $localPath);
-	finfo_close($finfo);
+    // Validate MIME type
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $mimeType = finfo_file($finfo, $localPath);
+    finfo_close($finfo);
 
-	$allowedMimeTypes = [
-		'image/jpeg',
-		'image/png',
-		'image/webp',
-		'image/gif',
-		'video/mp4',
-	];
+    $allowedMimeTypes = [
+        'image/jpeg',
+        'image/png',
+        'image/webp',
+        'image/gif',
+        'video/mp4',
+    ];
 
-	if (!in_array($mimeType, $allowedMimeTypes)) {
-		@unlink($localPath);
-		return false;
-	}
+    if (!in_array($mimeType, $allowedMimeTypes)) {
+        @unlink($localPath);
+        error_log("Invalid MIME type: " . $mimeType);
+        return false;
+    }
 
-	// Handle MP4 (video) - no processing
-	if ($mimeType === 'video/mp4') {
-		if (qa_opt('enable_aws')) {
-			$url = king_upload_to_cloud($localPath, $filename, 'aws');
-			return king_insert_uploads($url, 'mp4', null, null, 'aws');
-		} elseif (qa_opt('enable_wasabi')) {
-			$url = king_upload_to_cloud($localPath, $filename, 'wasabi');
-			return king_insert_uploads($url, 'mp4', null, null, 'wasabi');
-		} else {
-			return king_insert_uploads($folder . $filename, 'mp4', null, null);
-		}
-	}
+    // Handle MP4 (video) - no processing
+    if ($mimeType === 'video/mp4') {
+        if (qa_opt('enable_aws')) {
+            $url = king_upload_to_cloud($localPath, $filename, 'aws');
+            return king_insert_uploads($url, 'mp4', null, null, 'aws');
+        } elseif (qa_opt('enable_wasabi')) {
+            $url = king_upload_to_cloud($localPath, $filename, 'wasabi');
+            return king_insert_uploads($url, 'mp4', null, null, 'wasabi');
+        } else {
+            return king_insert_uploads($folder . $filename, 'mp4', null, null);
+        }
+    }
 
-	// Handle images
-	list($CurWidth, $CurHeight) = getimagesize($localPath);
-	if ($CurWidth <= 0 || $CurHeight <= 0) return false;
+    // Handle images - OPTIMIZED
+    $imageInfo = @getimagesize($localPath);
+    if ($imageInfo === false) {
+        @unlink($localPath);
+        error_log("Invalid image file");
+        return false;
+    }
+    
+    list($CurWidth, $CurHeight) = $imageInfo;
+    
+    if ($CurWidth <= 0 || $CurHeight <= 0) {
+        @unlink($localPath);
+        return false;
+    }
 
-	$NewWidth = $CurWidth;
-	$NewHeight = $CurHeight;
+    $NewWidth = $CurWidth;
+    $NewHeight = $CurHeight;
 
-	if ($resize) {
-		$scale = min($resize / $CurWidth, $resize / $CurHeight);
-		$NewWidth = max(1, (int)($scale * $CurWidth));
-		$NewHeight = max(1, (int)($scale * $CurHeight));
-	}
+    // Only resize if needed
+    if ($resize && ($CurWidth > $resize || $CurHeight > $resize)) {
+        $scale = min($resize / $CurWidth, $resize / $CurHeight);
+        $NewWidth = max(1, (int)($scale * $CurWidth));
+        $NewHeight = max(1, (int)($scale * $CurHeight));
+    }
 
-	$imageType = exif_imagetype($localPath);
-	switch ($imageType) {
-		case IMAGETYPE_WEBP: $source = imagecreatefromwebp($localPath); break;
-		case IMAGETYPE_PNG: $source = imagecreatefrompng($localPath); break;
-		case IMAGETYPE_JPEG: $source = imagecreatefromjpeg($localPath); break;
-		case IMAGETYPE_GIF: $source = imagecreatefromgif($localPath); break;
-		default: return false;
-	}
+    // Create image resource based on type
+    $imageType = $imageInfo[2];
+    $source = null;
+    
+    switch ($imageType) {
+        case IMAGETYPE_WEBP:
+            $source = @imagecreatefromwebp($localPath);
+            break;
+        case IMAGETYPE_PNG:
+            $source = @imagecreatefrompng($localPath);
+            break;
+        case IMAGETYPE_JPEG:
+            $source = @imagecreatefromjpeg($localPath);
+            break;
+        case IMAGETYPE_GIF:
+            $source = @imagecreatefromgif($localPath);
+            break;
+    }
+    
+    if ($source === false || $source === null) {
+        @unlink($localPath);
+        error_log("Failed to create image resource");
+        return false;
+    }
 
-	$resized = imagecreatetruecolor($NewWidth, $NewHeight);
-	imagecopyresampled($resized, $source, 0, 0, 0, 0, $NewWidth, $NewHeight, $CurWidth, $CurHeight);
+    // Only resize if dimensions changed
+    if ($NewWidth != $CurWidth || $NewHeight != $CurHeight) {
+        $resized = imagecreatetruecolor($NewWidth, $NewHeight);
+        
+        // Preserve transparency for PNG/GIF
+        if ($imageType === IMAGETYPE_PNG || $imageType === IMAGETYPE_GIF) {
+            imagealphablending($resized, false);
+            imagesavealpha($resized, true);
+            $transparent = imagecolorallocatealpha($resized, 255, 255, 255, 127);
+            imagefilledrectangle($resized, 0, 0, $NewWidth, $NewHeight, $transparent);
+        }
+        
+        imagecopyresampled($resized, $source, 0, 0, 0, 0, $NewWidth, $NewHeight, $CurWidth, $CurHeight);
+        imagedestroy($source);
+        $source = $resized;
+    }
 
-	if (qa_opt('watermark_default_show') && $waterk) {
-		$resized = king_apply_watermark($resized, $NewWidth, $NewHeight);
-		// Save the watermarked image to disk before converting to webp
-		imagejpeg($resized, $localPath, 100);
-	}
+    // Apply watermark if enabled
+    if (qa_opt('watermark_default_show') && $waterk) {
+        $source = king_apply_watermark($source, $NewWidth, $NewHeight);
+    }
 
-	// Always convert to webp
-	$webpPath = $localPath;
-	king_convert_to_webp($localPath, $webpPath, 100);
+    // Save as WebP
+    $webpPath = $localPath;
+    if (!imagewebp($source, $webpPath, 85)) { // Reduced quality from 100 to 85
+        imagedestroy($source);
+        @unlink($localPath);
+        error_log("Failed to save WebP");
+        return false;
+    }
+    
+    imagedestroy($source);
 
-	imagedestroy($source);
-	imagedestroy($resized);
-
-	// Cloud or local upload
-	if (qa_opt('enable_aws')) {
-		$url = king_upload_to_cloud($webpPath, $filename, 'aws');
-		return king_insert_uploads($url, 'webp', $NewWidth, $NewHeight, 'aws');
-	} elseif (qa_opt('enable_wasabi')) {
-		$url = king_upload_to_cloud($webpPath, $filename, 'wasabi');
-		return king_insert_uploads($url, 'webp', $NewWidth, $NewHeight, 'wasabi');
-	} else {
-		return king_insert_uploads($folder . $filename, 'webp', $NewWidth, $NewHeight);
-	}
+    // Cloud or local upload
+    if (qa_opt('enable_aws')) {
+        $url = king_upload_to_cloud($webpPath, $filename, 'aws');
+        return king_insert_uploads($url, 'webp', $NewWidth, $NewHeight, 'aws');
+    } elseif (qa_opt('enable_wasabi')) {
+        $url = king_upload_to_cloud($webpPath, $filename, 'wasabi');
+        return king_insert_uploads($url, 'webp', $NewWidth, $NewHeight, 'wasabi');
+    } else {
+        return king_insert_uploads($folder . $filename, 'webp', $NewWidth, $NewHeight);
+    }
 }
 
 function king_uploadthumb($ImageName, $TempSrc, $ImageType) {

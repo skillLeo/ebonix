@@ -39,7 +39,7 @@ list($categories, $followanswer, $completetags) = qa_db_select_with_pending(
 	isset($followpostid) ? qa_db_full_post_selectspec($userid, $followpostid) : null,
 	qa_db_popular_tags_selectspec(0, QA_DB_RETRIEVE_COMPLETE_TAGS)
 );
-
+ 
 if (!isset($categories[$in['categoryid']])) {
 	$in['categoryid'] = null;
 }
@@ -424,6 +424,104 @@ $cont .= '</div>';
 $cont .= '<div id="ai-results">'.king_ai_posts($userid, 'aivid').'</div>';
 $cont .= '</div>';
 $qa_content['custom'] = $cont;	
+$qa_content['custom'] .= '
+<script>
+(function(){
+	function kingGetReusePayload(){
+		var raw = null;
+		try{ raw = sessionStorage.getItem("king_ai_reuse"); }catch(e){}
+		if(!raw) return null;
+		try{
+			var data = JSON.parse(raw);
+			try{ sessionStorage.removeItem("king_ai_reuse"); }catch(e){}
+			return data;
+		}catch(e){
+			return null;
+		}
+	}
+
+	function kingSetTextarea(id, val){
+		var el = document.getElementById(id);
+		if(!el) return;
+		el.value = val || "";
+		if(typeof adjustHeight === "function"){ try{ adjustHeight(el); }catch(e){} }
+	}
+
+	function kingSelectRadio(name, value){
+		if(!value) return false;
+		var input = document.querySelector(\'input[name="\' + name + \'"][value="\' + CSS.escape(value) + \'"]\');
+		if(!input) return false;
+
+		var label = input.closest("label");
+		if(label && label.offsetParent === null) return false;
+
+		input.checked = true;
+		try{ input.dispatchEvent(new Event("change", {bubbles:true})); }catch(e){}
+		try{ input.click(); }catch(e){}
+		return true;
+	}
+
+	function kingSetVideoModel(model){
+		if(!model) return;
+		var input = document.querySelector(\'input[name="aimodel"][value="\' + CSS.escape(model) + \'"]\');
+		if(!input) return;
+
+		input.checked = true;
+		try{ input.dispatchEvent(new Event("change", {bubbles:true})); }catch(e){}
+		try{ input.click(); }catch(e){}
+
+		// update dropdown label
+		var labelEl = document.getElementById("model-select-label");
+		if(labelEl){
+			var lbl = input.closest("label");
+			if(lbl){
+				var t = (lbl.innerText || lbl.textContent || "").trim();
+				if(t) labelEl.innerText = t;
+			}
+		}
+
+		// update container class so css rules apply
+		var ch = document.getElementById("chclass");
+		if(ch) ch.className = model;
+	}
+
+	document.addEventListener("DOMContentLoaded", function(){
+		var payload = kingGetReusePayload();
+		if(!payload) return;
+
+		// only apply for video page
+		if(!payload.isVideo || parseInt(payload.isVideo, 10) !== 1) return;
+
+		if(payload.prompt) kingSetTextarea("ai-box", payload.prompt);
+
+		if(payload.model) kingSetVideoModel(payload.model);
+
+		// size value on video page is like 16:9 9:16 etc
+		if(payload.size){
+			var ok = kingSelectRadio("aisize", payload.size);
+			if(ok){
+				var b = document.getElementById("aivsizeb");
+				if(b) b.innerText = payload.size;
+			}
+		}
+
+		// reso optional 540p 720p
+		if(payload.reso){
+			var ok2 = kingSelectRadio("reso", payload.reso);
+			if(ok2){
+				var r = document.getElementById("video-reso-label");
+				if(r) r.innerText = payload.reso;
+			}
+		}
+
+		var box = document.getElementById("ai-box");
+		if(box){ try{ box.focus(); }catch(e){} }
+	});
+})();
+</script>
+';
+
+
 $qa_content['form'] = array(
 	'tags'    => 'name="ask" method="post" action="' . qa_self_html() . '" id="ai-form"',
 

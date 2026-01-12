@@ -2462,76 +2462,154 @@ public function vote_buttonsup( $post ) {
 	{
 		$pid   = $q_view['raw']['postid'];
 		$text2 = $q_view['raw']['postformat'];
-		$wai = qa_db_postmeta_get( $pid, 'wai' );
+		$wai = qa_db_postmeta_get($pid, 'wai');
 		$blockwordspreg = qa_get_block_words_preg();
-		if ( 'N' === $text2 ) {
+	
+		if ('N' === $text2) {
 			$thumb  = $q_view['raw']['content'];
-			$thumb2 = ( null !== $thumb ) ? king_get_uploads( $thumb ) : '' ;
-			if ( $thumb2 ) {
+			$thumb2 = (null !== $thumb) ? king_get_uploads($thumb) : '';
+			if ($thumb2) {
 				$this->output('<img src="'.$thumb2['furl'].'" class="king-news-thumb" />');
 			}
-			
 		}
-
-
-		if ( ! $wai ) {
-			$this->output( '<div class="post-content">' . qa_block_words_replace( $q_view['raw']['pcontent'], $blockwordspreg ) . '</div>' );
+	
+		if (!$wai) {
+			$this->output('<div class="post-content">' . qa_block_words_replace($q_view['raw']['pcontent'], $blockwordspreg) . '</div>');
 		} else {
 			$this->output('<div class="aicontnt">');
+	
 			$this->output('<div class="ailup">');
-			$this->output( '<span class="aiplabel">' . qa_lang('misc/prompt') . '</span>' );
-			$this->output( '<div class="post-content" id="post-content">' . qa_block_words_replace( $q_view['raw']['pcontent'], $blockwordspreg ) . '</div>' );
-			$this->output( '<button id="copyp" onclick="copyText()"><i class="fa-solid fa-copy"></i> '.qa_lang('misc/copyp').'</button>' );
+			$this->output('<span class="aiplabel">' . qa_lang('misc/prompt') . '</span>');
+			$this->output('<div class="post-content" id="post-content">' . qa_block_words_replace($q_view['raw']['pcontent'], $blockwordspreg) . '</div>');
+			$this->output('<button id="copyp" onclick="copyText()"><i class="fa-solid fa-copy"></i> ' . qa_lang('misc/copyp') . '</button>');
+	
+			// ✅ generate button (does nothing)
+
+			$mdl  = qa_db_postmeta_get($pid, 'model');
+$asize = qa_db_postmeta_get($pid, 'asize');
+$np  = qa_db_postmeta_get($pid, 'nprompt');
+$stle = qa_db_postmeta_get($pid, 'stle');
+$reso = qa_db_postmeta_get($pid, 'reso'); // may not exist for some posts, ok
+
+$this->output(
+	'<button type="button"
+		id="king-generate"
+		class="king-generate-btn"
+		data-model="'.qa_html($mdl).'"
+		data-size="'.qa_html($asize).'"
+		data-nprompt="'.qa_html($np).'"
+		data-style="'.qa_html($stle).'"
+		data-reso="'.qa_html($reso).'"
+		data-url-image="'.qa_path_html('submitai').'"
+		data-url-video="'.qa_path_html('videoai').'"
+		onclick="return kingReuseAiFromPost(this);"
+	><i class="fa-solid fa-wand-magic-sparkles"></i> generate</button>'
+);
+
+
+
 			$this->output('</div>');
 
-			$np = qa_db_postmeta_get( $pid, 'nprompt' );
+			static $kingReuseAiScriptAdded = false;
+if (!$kingReuseAiScriptAdded) {
+	$kingReuseAiScriptAdded = true;
+
+	$this->output('
+<script>
+function kingReuseAiFromPost(btn){
+	try{
+		var promptEl = document.getElementById("post-content");
+		var prompt = promptEl ? (promptEl.innerText || promptEl.textContent || "").trim() : "";
+
+		var model  = (btn.getAttribute("data-model") || "").trim();
+		var size   = (btn.getAttribute("data-size") || "").trim();
+		var nprompt= (btn.getAttribute("data-nprompt") || "").trim();
+		var style  = (btn.getAttribute("data-style") || "").trim();
+		var reso   = (btn.getAttribute("data-reso") || "").trim();
+
+		var videoModels = ["kst","wan","luma","pixverse","veo","see","veo3","veo3f"];
+		var isVideo = videoModels.indexOf(model) !== -1;
+
+		var url = isVideo ? btn.getAttribute("data-url-video") : btn.getAttribute("data-url-image");
+		if(!url){ return false; }
+
+		var payload = {
+			prompt: prompt,
+			model: model,
+			size: size,
+			nprompt: nprompt,
+			style: style,
+			reso: reso,
+			isVideo: isVideo ? 1 : 0
+		};
+
+		try{
+			sessionStorage.setItem("king_ai_reuse", JSON.stringify(payload));
+		}catch(e){}
+
+		if (url.indexOf("?") === -1) url += "?reuse=1";
+		else url += "&reuse=1";
+
+		window.location.href = url;
+	}catch(e){
+		console.error(e);
+	}
+	return false;
+}
+</script>
+	');
+}
+
+	
+			$np = qa_db_postmeta_get($pid, 'nprompt');
 			if ($np) {
 				$this->output('<div class="ailup">');
-				$this->output( '<span class="aiplabel">' . qa_lang('misc/ai_nprompt') . '</span>' );
-				$this->output( $np );
+				$this->output('<span class="aiplabel">' . qa_lang('misc/ai_nprompt') . '</span>');
+				$this->output($np);
 				$this->output('</div>');
 			}
+	
 			$this->output('<div class="ailup">');
-			$mdl = qa_db_postmeta_get( $pid, 'model' );
-			$this->output( '<span class="aiplabel">' . qa_lang('misc/model') . '</span>' );
-			$this->output( qa_lang('misc/'.$mdl) );
+			$mdl = qa_db_postmeta_get($pid, 'model');
+			$this->output('<span class="aiplabel">' . qa_lang('misc/model') . '</span>');
+			$this->output(qa_lang('misc/' . $mdl));
 			$this->output('</div>');
-
+	
 			$this->output('<div class="ailup">');
-			$asize = qa_db_postmeta_get( $pid, 'asize' );
-			$this->output( '<span class="aiplabel">' . qa_lang('misc/aisizes') . '</span>' );
-			$this->output( $asize );
+			$asize = qa_db_postmeta_get($pid, 'asize');
+			$this->output('<span class="aiplabel">' . qa_lang('misc/aisizes') . '</span>');
+			$this->output($asize);
 			$this->output('</div>');
-
-			$stle = qa_db_postmeta_get( $pid, 'stle' );
+	
+			$stle = qa_db_postmeta_get($pid, 'stle');
 			if ($stle) {
 				$this->output('<div class="ailup">');
-				$this->output( '<span class="aiplabel">' . qa_lang('misc/ai_filter') . '</span>' );
-				$this->output( $stle );
+				$this->output('<span class="aiplabel">' . qa_lang('misc/ai_filter') . '</span>');
+				$this->output($stle);
 				$this->output('</div>');
 			}
-			$imageid = qa_db_postmeta_get( $pid, 'pimage' );
+	
+			$imageid = qa_db_postmeta_get($pid, 'pimage');
 			if ($imageid) {
 				$imageurl = king_get_uploads($imageid);
 				$this->output('<div class="ailup">');
-				$this->output( '<span class="aiplabel">' . qa_lang('misc/iprompt') . '</span>' );
-				$this->output( '<img class="ai-img" src="' . qa_html( $imageurl['furl'] ) . '" style="max-width: 200px; height: auto;" />' );
+				$this->output('<span class="aiplabel">' . qa_lang('misc/iprompt') . '</span>');
+				$this->output('<img class="ai-img" src="' . qa_html($imageurl['furl']) . '" style="max-width: 200px; height: auto;" />');
 				$this->output('</div>');
 			}
+	
 			$this->output('</div>');
 		}
-
-		
-
-		
-		if ( 'poll' == $text2 ) {
-			$this->get_poll( $pid );
-		} elseif ( 'list' == $text2 ) {
-			$this->get_list( $pid );
-		} elseif ( 'trivia' == $text2 ) {
-			$this->get_trivia( $pid );
+	
+		if ('poll' == $text2) {
+			$this->get_poll($pid);
+		} elseif ('list' == $text2) {
+			$this->get_list($pid);
+		} elseif ('trivia' == $text2) {
+			$this->get_trivia($pid);
 		}
 	}
+	
 
 	public function get_list($pid)
 	{

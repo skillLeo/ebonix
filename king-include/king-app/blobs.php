@@ -186,3 +186,102 @@
 /*
 	Omit PHP closing tag to help avoid accidental output
 */
+
+
+
+function king_process_local_image($localPath, $relativePath, $isThumb = false, $maxSize = null) {
+    if (!file_exists($localPath)) {
+        error_log("Local file not found: " . $localPath);
+        return false;
+    }
+
+    // Get image info
+    $imageInfo = @getimagesize($localPath);
+    if ($imageInfo === false) {
+        error_log("Invalid image file: " . $localPath);
+        return false;
+    }
+    
+    list($CurWidth, $CurHeight) = $imageInfo;
+    
+    if ($CurWidth <= 0 || $CurHeight <= 0) {
+        return false;
+    }
+
+    $NewWidth = $CurWidth;
+    $NewHeight = $CurHeight;
+
+    // Resize if needed
+    if ($maxSize && ($CurWidth > $maxSize || $CurHeight > $maxSize)) {
+        $scale = min($maxSize / $CurWidth, $maxSize / $CurHeight);
+        $NewWidth = max(1, (int)($scale * $CurWidth));
+        $NewHeight = max(1, (int)($scale * $CurHeight));
+    }
+
+    // Process based on whether it's a thumbnail or full image
+    $filename = basename($relativePath);
+    if ($isThumb) {
+        $filename = 'thumb_' . $filename;
+    }
+    
+    $folder = dirname($relativePath) . '/';
+    $destDir = QA_INCLUDE_DIR . $folder;
+    $outputPath = $destDir . $filename;
+
+    // Create image resource
+    $imageType = $imageInfo[2];
+    $source = null;
+    
+    switch ($imageType) {
+        case IMAGETYPE_WEBP:
+            $source = @imagecreatefromwebp($localPath);
+            break;
+        case IMAGETYPE_PNG:
+            $source = @imagecreatefrompng($localPath);
+            break;
+        case IMAGETYPE_JPEG:
+            $source = @imagecreatefromjpeg($localPath);
+            break;
+        case IMAGETYPE_GIF:
+            $source = @imagecreatefromgif($localPath);
+            break;
+    }
+    
+    if ($source === false || $source === null) {
+        error_log("Failed to create image resource from: " . $localPath);
+        return false;
+    }
+
+    // Resize if dimensions changed
+    if ($NewWidth != $CurWidth || $NewHeight != $CurHeight) {
+        $resized = imagecreatetruecolor($NewWidth, $NewHeight);
+        imagecopyresampled($resized, $source, 0, 0, 0, 0, $NewWidth, $NewHeight, $CurWidth, $CurHeight);
+        imagedestroy($source);
+        $source = $resized;
+    }
+
+    // Apply watermark if enabled and it's a thumbnail
+    if ($isThumb && qa_opt('watermark_default_show')) {
+        $source = king_apply_watermark($source, $NewWidth, $NewHeight);
+    }
+
+    // Save as WebP
+    if (!imagewebp($source, $outputPath, 85)) {
+        imagedestroy($source);
+        error_log("Failed to save WebP: " . $outputPath);
+        return false;
+    }
+    
+    imagedestroy($source);
+
+    // Upload to cloud or keep local
+    if (qa_opt('enable_aws')) {
+        $url = king_upload_to_cloud($outputPath, $filename, 'aws');
+        return king_insert_uploads($url, 'webp', $NewWidth, $NewHeight, 'aws');
+    } elseif (qa_opt('enable_wasabi')) {
+        $url = king_upload_to_cloud($outputPath, $filename, 'wasabi');
+        return king_insert_uploads($url, 'webp', $NewWidth, $NewHeight, 'wasabi');
+    } else {
+        return king_insert_uploads($folder . $filename, 'webp', $NewWidth, $NewHeight);
+    }
+}
