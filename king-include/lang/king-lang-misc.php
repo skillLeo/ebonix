@@ -290,7 +290,16 @@
 		'flux_pro' => 'Flux Pro',
 		'sdream' => 'Seedream',
 		'kst' => 'Foxai',
-		'banana' => 'Nano Banana'
+		'banana' => 'Nano Banana',
+
+
+		'decart' => 'Decart',
+'decart_vid' => 'Decart Video',
+'decart_img' => 'Decart Image',
+
+'luma' => 'Luma Dream Machine',
+'luma_vid' => 'Luma Video',
+'luma_img' => 'Luma Image',
  	);
 
 /*

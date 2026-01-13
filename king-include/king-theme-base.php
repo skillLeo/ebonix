@@ -2513,7 +2513,7 @@ $this->output(
 			static $kingReuseAiScriptAdded = false;
 if (!$kingReuseAiScriptAdded) {
 	$kingReuseAiScriptAdded = true;
-
+ 
 	$this->output('
 <script>
 function kingReuseAiFromPost(btn){
@@ -2527,7 +2527,7 @@ function kingReuseAiFromPost(btn){
 		var style  = (btn.getAttribute("data-style") || "").trim();
 		var reso   = (btn.getAttribute("data-reso") || "").trim();
 
-		var videoModels = ["kst","wan","luma","pixverse","veo","see","veo3","veo3f"];
+var videoModels = ["kst","wan","luma","pixverse","veo","see","veo3","veo3f","decart_vid","luma_vid"];
 		var isVideo = videoModels.indexOf(model) !== -1;
 
 		var url = isVideo ? btn.getAttribute("data-url-video") : btn.getAttribute("data-url-image");

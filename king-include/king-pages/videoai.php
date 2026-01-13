@@ -1,3 +1,4 @@
+
 <?php
 /*
 This program is free software; you can redistribute it and/or
@@ -241,6 +242,17 @@ $models = array(
 		'enabled' => qa_opt('enable_kst'),
 		'label' => qa_lang('misc/kst'),
 	),
+
+	'luma_vid' => array(
+    'enabled' => qa_opt('enable_luma_vid'),
+    'label' => qa_lang('misc/luma_vid'),
+),
+	'decart_vid' => array(
+	'enabled' => qa_opt('enable_decart_vid'),
+	'label' => qa_lang('misc/decart_vid'),
+),
+
+
 	'wan' => array(
 		'enabled' => qa_opt('enable_wan'),
 		'label' => qa_lang('misc/wan'),
@@ -374,8 +386,27 @@ if ($veo3f_enabled) {
 		<span>' . qa_lang('misc/veo3f') . '</span>
 	</label>';
 }
+
+$decart_vid_enabled = !empty($models['decart_vid']['enabled']);
+if ($decart_vid_enabled) {
+	$checked = ($default_value == 'decart_vid') ? 'checked' : '';
+	$cont .= '<label class="cradio">
+		<input type="radio" name="aimodel" value="decart_vid" ' . $checked . '>
+		<span>' . qa_lang('misc/decart_vid') . '</span>
+	</label>';
+}
+$luma_vid_enabled = !empty($models['luma_vid']['enabled']);
+if ($luma_vid_enabled) {
+	$checked = ($default_value == 'luma_vid') ? 'checked' : '';
+	$cont .= '<label class="cradio">
+		<input type="radio" name="aimodel" value="luma_vid" ' . $checked . '>
+		<span>' . qa_lang('misc/luma_vid') . '</span>
+	</label>';
+}
 $cont .= '</div>';
 $cont .= '</div>';
+
+
 
 
 

@@ -29,7 +29,6 @@ require_once QA_INCLUDE_DIR.'king-db/selects.php';
 require_once QA_INCLUDE_DIR.'king-util/sort.php';
 require_once QA_INCLUDE_DIR.'king-db/metas.php';
 require_once QA_INCLUDE_DIR.'king-app/posts.php';
-//    Check whether this is a follow-on question and get some info we need from the database
 
 $in = array();
 
@@ -52,8 +51,6 @@ if (@$followanswer['basetype'] != 'A') {
 	$followanswer = null;
 }
 
-//    Check for permission error
-
 $permiterror = qa_user_maximum_permit_error('permit_post_q', QA_LIMIT_QUESTIONS);
 
 if ($permiterror && qa_clicked('doask')) {
@@ -61,7 +58,7 @@ if ($permiterror && qa_clicked('doask')) {
 	$errors['permiterror'] = qa_lang_html('question/ask_limit');
 	$response['status'] = 'error';
 	$response['message'] = $errors;
-	echo json_encode($response); // Output response as JSON
+	echo json_encode($response);
 	exit;
 }
 
@@ -107,11 +104,8 @@ if ($permiterror || ! qa_opt('king_leo_enable')) {
 	return $qa_content;
 }
 
-
 $captchareason = qa_user_captcha_reason();
-
-$in['title'] = qa_get_post_title('title'); // allow title and tags to be posted by an external form
-
+$in['title'] = qa_get_post_title('title');
 
 if (qa_using_tags()) {
 	$in['tags'] = qa_get_tags_field_value('tags');
@@ -157,7 +151,7 @@ if (qa_clicked('doask')) {
 		}
 
         if (empty($errors)) {
-            $cookieid = isset($userid) ? qa_cookie_get() : qa_cookie_get_create(); // create a new cookie if necessary
+            $cookieid = isset($userid) ? qa_cookie_get() : qa_cookie_get_create();
 
 			king_update_ai_post($in['postid'], $in['title'], isset($in['tags']) ? qa_tags_to_tagstring($in['tags']) : '', $in['nsfw'], 'I');
 
@@ -180,88 +174,125 @@ if (qa_clicked('doask')) {
             $response['status'] = 'error';
             $response['message'] = $errors;
         }
-        echo json_encode($response); // Output response as JSON
+        echo json_encode($response);
         exit;
     }
 }
-	if (qa_is_logged_in() && ( qa_opt('ailimits') || qa_opt('ulimits') ) && qa_get_logged_in_level() <= QA_USER_LEVEL_ADMIN && qa_opt('enable_membership')) {
-		$qa_content = qa_content_prepare();
-		$mp  = qa_db_usermeta_get( $userid, 'membership_plan' );
-		$pl = null;
-		if ($mp) {
-			$pl = (INT)qa_opt('plan_'.$mp.'_lmt');
-		} elseif(qa_opt('ulimits')) {
-			$pl = (INT)qa_opt('ulimit');
-		}
-		$alm = (INT)qa_db_usermeta_get( $userid, 'ailmt' );
-		if ($alm >= $pl) {
-			$qa_content['custom'] = '<div class="nopost"><i class="fa-solid fa-circle-user fa-4x"></i>'.qa_lang('misc/nocredits').'<p><a href="'.qa_path_html('membership').'">'.qa_lang('misc/buycredits').'</a></p></div>';
-			return $qa_content;
-		}
+
+if (qa_is_logged_in() && ( qa_opt('ailimits') || qa_opt('ulimits') ) && qa_get_logged_in_level() <= QA_USER_LEVEL_ADMIN && qa_opt('enable_membership')) {
+	$qa_content = qa_content_prepare();
+	$mp  = qa_db_usermeta_get( $userid, 'membership_plan' );
+	$pl = null;
+	if ($mp) {
+		$pl = (INT)qa_opt('plan_'.$mp.'_lmt');
+	} elseif(qa_opt('ulimits')) {
+		$pl = (INT)qa_opt('ulimit');
 	}
-//    Prepare content for theme
+	$alm = (INT)qa_db_usermeta_get( $userid, 'ailmt' );
+	if ($alm >= $pl) {
+		$qa_content['custom'] = '<div class="nopost"><i class="fa-solid fa-circle-user fa-4x"></i>'.qa_lang('misc/nocredits').'<p><a href="'.qa_path_html('membership').'">'.qa_lang('misc/buycredits').'</a></p></div>';
+		return $qa_content;
+	}
+}
 
 $qa_content = qa_content_prepare(false, array_keys(qa_category_path($categories, @$in['categoryid'])));
 
 $qa_content['title'] = qa_lang_html('main/image');
 $qa_content['error'] = @$errors['page'];
 
-
 $field['label'] = qa_lang_html('question/q_content_label');
 $field['error'] = qa_html(@$errors['content']);
 
 $custom = qa_opt('show_custom_ask') ? trim(qa_opt('custom_ask')) : '';
 
-    // Define model options and their labels
+// ========== DEFINE MODELS (FIXED) ==========
 $models = array(
-	'sdn'     => qa_lang('misc/sdn'),
-	'flux_pro' => qa_lang('misc/flux_pro'),
-	'sdream'   => qa_lang('misc/sdream'),
-	'banana'   => qa_lang('misc/banana'),
-	'sd'      => qa_lang('misc/sd'),
-	'flux'    => qa_lang('misc/flux'),
-	'proteus' => qa_lang('misc/proteus'),
-	'realxl'  => qa_lang('misc/realxl'),
-	'imagen4' => qa_lang('misc/imagen4'),
-	'fluxkon' => qa_lang('misc/fluxkon'),
-	'de'      => qa_lang('misc/de'),
-	'de3'     => qa_lang('misc/de3'),
-	
+	'sdn' => array(
+		'enabled' => qa_opt('enable_sdn'),
+		'label' => qa_lang('misc/sdn'),
+	),
+	'flux_pro' => array(
+		'enabled' => qa_opt('enable_flux_pro'),
+		'label' => qa_lang('misc/flux_pro'),
+	),
+	'sdream' => array(
+		'enabled' => qa_opt('enable_sdream'),
+		'label' => qa_lang('misc/sdream'),
+	),
+	'banana' => array(
+		'enabled' => qa_opt('enable_banana'),
+		'label' => qa_lang('misc/banana'),
+	),
+	'sd' => array(
+		'enabled' => qa_opt('enable_sd'),
+		'label' => qa_lang('misc/sd'),
+	),
+	'flux' => array(
+		'enabled' => qa_opt('enable_flux'),
+		'label' => qa_lang('misc/flux'),
+	),
+	'realxl' => array(
+		'enabled' => qa_opt('enable_realxl'),
+		'label' => qa_lang('misc/realxl'),
+	),
+	'imagen4' => array(
+		'enabled' => qa_opt('enable_imagen4'),
+		'label' => qa_lang('misc/imagen4'),
+	),
+	'fluxkon' => array(
+		'enabled' => qa_opt('enable_fluxkon'),
+		'label' => qa_lang('misc/fluxkon'),
+	),
+	'de' => array(
+		'enabled' => qa_opt('enable_de'),
+		'label' => qa_lang('misc/de'),
+	),
+	'de3' => array(
+		'enabled' => qa_opt('enable_de3'),
+		'label' => qa_lang('misc/de3'),
+	),
+	'decart_img' => array(
+		'enabled' => qa_opt('enable_decart_img'),
+		'label' => qa_lang('misc/decart_img'),
+	),
+	'luma_img' => array(
+    'enabled' => qa_opt('enable_luma_img'),
+    'label' => qa_lang('misc/luma_img'),
+),
 );
 
-// Filter enabled models based on options
+// Filter enabled models
 $enabled_models = array();
-foreach ($models as $key => $label) {
-	if (qa_opt('enable_' . $key)) {
-		$enabled_models[$key] = $label;
+foreach ($models as $key => $data) {
+	if (!empty($data['enabled'])) {
+		$enabled_models[$key] = $data['label'];
 	}
 }
+
 $first_model_key = key($enabled_models);
+$first_model_label = $enabled_models[$first_model_key] ?? 'No Model';
+
 $context = '';
-$context .= '<div id="chclass" class="' . $first_model_key . '">';
+$context .= '<div id="chclass" class="' . qa_html($first_model_key) . '">';
 $context .= '<div class="kingai-ext">';
-
-
-
-// Set first model as default selected
-
-$first_model_label = $enabled_models[$first_model_key];
 $context .= '<div class="ail-settings">';
-// Begin dropdown
+
+// Model dropdown
 $context .= '<div class="king-dropdownup custom-select hveo">';
-$context .= '<div class="king-sbutton kings-button" id="aimodelbtn" data-toggle="dropdown" aria-expanded="false" role="button">' . $first_model_label . '</div>';
+$context .= '<div class="king-sbutton kings-button" id="aimodelbtn" data-toggle="dropdown" aria-expanded="false" role="button">' . qa_html($first_model_label) . '</div>';
 $context .= '<div class="king-dropdownc king-dropleft aimodels">';
 
 // Render radio buttons
 foreach ($enabled_models as $key => $label) {
 	$checked = ($key === $first_model_key) ? 'checked' : '';
-	$context .= '<label class="cradio"><input type="radio" name="aimodel" value="' . $key . '" class="hide" ' . $checked . ' onclick="updateModelLabel(this)"><span>' . $label . '</span></label>';
+	$context .= '<label class="cradio"><input type="radio" name="aimodel" value="' . qa_html($key) . '" class="hide" ' . $checked . ' onclick="updateModelLabel(this)"><span>' . qa_html($label) . '</span></label>';
 }
 
 $context .= '</div></div>';
-    
 $context .= '<div id="newsthumb" class="dropzone king-poll-file aiupload"></div>';
 $context .= '</div>';
+
+// Size tabs
 $context .= '<div id="desizes">';
 $context .= '<ul class="nav nav-tabs" id="ssize">
 	<li class="active"><a href="#aisizes" data-toggle="tab" aria-expanded="true">'.qa_lang('misc/aisizes').'</a></li>
@@ -270,13 +301,12 @@ $context .= '<ul class="nav nav-tabs" id="ssize">
 		$context .= '<li class="sdsize"><a href="#nprompt" data-toggle="tab" aria-expanded="false">'.qa_lang('misc/ai_nprompt').'</a></li>';
 	}
 $context .= '</ul>';
+
 $context .= '<div id="aisizes" role="tabpanel" class="tabcontent aistyles active">
 <input type="radio" id="aisize9" name="aisize" value="1344x768" class="hide">
 <label for="aisize9" class="ailabel sdsize" title="1344x768" data-toggle="tooltip"><i class="king-square s1"></i> '.qa_lang('misc/widescreen').' (16:9)</label>
 <input type="radio" id="aisize4" name="aisize" value="1152x896" class="hide">
 <label for="aisize4" class="ailabel sdsize" title="1152x896" data-toggle="tooltip"><i class="king-square s2"></i> '.qa_lang('misc/landscape').' (5:4)</label>
-
-
 <input type="radio" id="aisize10" name="aisize" value="1792x1024" class="hide">
 <label for="aisize10" class="ailabel desize3" title="1792x1024" data-toggle="tooltip"><i class="king-square s1"></i> '.qa_lang('misc/widescreen').' (7:4)</label>
 <input type="radio" id="aisize1" name="aisize" value="512x512" class="hide">
@@ -285,17 +315,13 @@ $context .= '<div id="aisizes" role="tabpanel" class="tabcontent aistyles active
 <label for="aisize3" class="ailabel" title="1024x1024" data-toggle="tooltip"><i class="king-square"></i> '.qa_lang('misc/square').' (1:1)</label>
 <input type="radio" id="aisize11" name="aisize" value="1024x1792" class="hide">
 <label for="aisize11" class="ailabel desize3" title="1024x1792" data-toggle="tooltip"><i class="king-square s5"></i> '.qa_lang('misc/vertical').' (4:7)</label>
-';
- 
-$context .= '<input type="radio" id="aisize8" name="aisize" value="896x1152" class="hide">
+<input type="radio" id="aisize8" name="aisize" value="896x1152" class="hide">
 <label for="aisize8" class="ailabel sdsize" title="896x1152" data-toggle="tooltip"><i class="king-square s4"></i> '.qa_lang('misc/portrait').' (4:5)</label>
 <input type="radio" id="aisize5" name="aisize" value="832x1216" class="hide">
 <label for="aisize5" class="ailabel sdsize aisize8" title="832x1216" data-toggle="tooltip"><i class="king-square s4"></i> '.qa_lang('misc/vertical').' (2:3)</label>
 <input type="radio" id="aisize7" name="aisize" value="768x1344" class="hide">
 <label for="aisize7" class="ailabel sdsize" title="768x1344" data-toggle="tooltip"><i class="king-square s5"></i> '.qa_lang('misc/long').' (9:16)</label>
 </div>';
-
-
 
 if (qa_opt('enprompt')) {
 	$context .= '<div id="nprompt" role="tabpanel" class="tabcontent aistyles">';
@@ -304,34 +330,15 @@ if (qa_opt('enprompt')) {
 }
 
 $context .= '<div id="aistyles" role="tabpanel" class="tabcontent aistyles">';
-$styles = array(
-	'none',
-	'3d-model',
-	'analog-film',
-	'anime',
-    'cinematic',
-    'comic-book',
-    'digital-art',
-    'fantasy-art',
-    'isometric',
-    'line-art',
-    'low-poly',
-    'neon-punk',
-    'origami',
-    'photographic',
-    'pixel-art',
-);
+$styles = array('none', '3d-model', 'analog-film', 'anime', 'cinematic', 'comic-book', 'digital-art', 'fantasy-art', 'isometric', 'line-art', 'low-poly', 'neon-punk', 'origami', 'photographic', 'pixel-art');
 
 foreach ($styles as $style) {
     $context .= '<input type="radio" id="aistyle_' . $style . '" name="aistyle" value="' . $style . '" class="hide">';
     $context .= '<label for="aistyle_' . $style . '" class="ailabel">' . $style . '</label>';
 }
-$context .= '</div>';
-$context .= '</div>';
-$context .= '</div>';
+$context .= '</div></div></div>';
 
 $context .= '<div id="ai-results">'.king_ai_posts($userid, 'aimg').'</div>';
-
 
 if (qa_is_logged_in()) {
 $cont = '';
@@ -360,7 +367,6 @@ $cont .= '<div class="kingai-input">
 $cont .= '<div class="kingai-buttons">';
 if (qa_opt('eprompter')) {
     $showElement = qa_opt('oaprompter') ? (qa_get_logged_in_level() >= QA_USER_LEVEL_ADMIN) : true;
-    
     if ($showElement) {
         $cont .= '<button type="button" id="prompter" onclick="aipromter(this)" class="king-sbutton ai-create promter" data-toggle="tooltip" title="' . qa_lang('misc/prompter') . '" data-placement="left"><i class="fa-solid fa-feather"></i><div class="loader"></div></button>';
     }
@@ -370,8 +376,6 @@ $cont .= '<button type="button" id="ai-submit" class="ai-submit" onclick="return
 <span><i class="fa-solid fa-paper-plane"></i> '.qa_lang('misc/generate').'</span><div class="loader"></div></button>
 			</div>
 		</div>';
-
-	
 
 $cont .= $context;
 $cont .= '</div>';
@@ -403,13 +407,9 @@ $qa_content['custom'] .= '
 		if(!value) return false;
 		var input = document.querySelector(\'input[name="\' + name + \'"][value="\' + CSS.escape(value) + \'"]\');
 		if(!input) return false;
-
-		// if option exists but is hidden for this model, skip
 		var label = input.closest("label");
 		if(label && label.offsetParent === null) return false;
-
 		input.checked = true;
-		// trigger click so any existing js updates UI
 		try{ input.dispatchEvent(new Event("change", {bubbles:true})); }catch(e){}
 		try{ input.click(); }catch(e){}
 		return true;
@@ -419,12 +419,9 @@ $qa_content['custom'] .= '
 		if(!model) return;
 		var input = document.querySelector(\'input[name="aimodel"][value="\' + CSS.escape(model) + \'"]\');
 		if(!input) return;
-
 		input.checked = true;
 		try{ input.dispatchEvent(new Event("change", {bubbles:true})); }catch(e){}
 		try{ input.click(); }catch(e){}
-
-		// update dropdown button text
 		var btn = document.getElementById("aimodelbtn");
 		if(btn){
 			var lbl = input.closest("label");
@@ -433,8 +430,6 @@ $qa_content['custom'] .= '
 				if(t) btn.innerText = t;
 			}
 		}
-
-		// update container class so css rules apply
 		var ch = document.getElementById("chclass");
 		if(ch) ch.className = model;
 	}
@@ -442,23 +437,12 @@ $qa_content['custom'] .= '
 	document.addEventListener("DOMContentLoaded", function(){
 		var payload = kingGetReusePayload();
 		if(!payload) return;
-
-		// only apply for image page
 		if(payload.isVideo && parseInt(payload.isVideo, 10) === 1) return;
-
 		if(payload.prompt) kingSetTextarea("ai-box", payload.prompt);
-
 		if(payload.model) kingSetImageModel(payload.model);
-
-		// size value on image page is like 1024x1024 etc
 		if(payload.size) kingSelectRadio("aisize", payload.size);
-
-		// style optional
 		if(payload.style) kingSelectRadio("aistyle", payload.style);
-
-		// negative prompt optional
 		if(payload.nprompt) kingSetTextarea("n_prompt", payload.nprompt);
-
 		var box = document.getElementById("ai-box");
 		if(box){ try{ box.focus(); }catch(e){} }
 	});
@@ -468,9 +452,7 @@ $qa_content['custom'] .= '
 
 $qa_content['form'] = array(
 	'tags'    => 'name="ask" method="post" action="' . qa_self_html() . '" id="ai-form"',
-
 	'style'   => 'tall',
-
 	'fields'  => array(
 		'close'    => array(
 			'type' => 'custom',
@@ -480,14 +462,12 @@ $qa_content['form'] = array(
 			'type' => 'custom',
 			'html' => '<div id="error-container"></div>',
 		),		
-		
 		'title'     => array(
 			'label' => qa_lang_html('question/q_title_label'),
 			'tags'  => 'name="title" id="title" autocomplete="off" minlength="'.qa_opt('min_len_q_title').'"  required',
 			'value' => qa_html(@$in['title']),
 			'error' => qa_html(@$errors['title']),
 		),
-
 		'similar'   => array(
 			'type' => 'custom',
 			'html' => '<span id="similar"></span>',
@@ -496,17 +476,13 @@ $qa_content['form'] = array(
 			'label' => '',
 			'tags'  => 'name="uniqueid" id="uniqueid" class="hide"',
 		),
-
-
 	),
-
 	'buttons' => array(
 		'ask' => array(
 			'tags'  => 'onclick="submitAiform(event);" id="submitButton"',
 			'label' => qa_lang_html('question/ask_button'),
 		),
 	),
-
 	'hidden'  => array(
 		'code'   => qa_get_form_security_code('ask'),
 		'doask'  => '1',
@@ -521,26 +497,19 @@ if (!strlen($custom)) {
 if (qa_opt('do_ask_check_qs') || qa_opt('do_example_tags')) {
 	$qa_content['script_rel'][] = 'king-content/king-ask.js?' . QA_VERSION;
 	$qa_content['form']['fields']['title']['tags'] .= ' onchange="qa_title_change(this.value);"';
-
 	if (strlen(@$in['title'])) {
 		$qa_content['script_onloads'][] = 'qa_title_change(' . qa_js($in['title']) . ');';
-		
-
 	}
-
 }
 $qa_content['script_var']['leoai']=qa_path('submitai_ajax');
 
-
 if (isset($followanswer)) {
 	$viewer = qa_load_viewer($followanswer['content'], $followanswer['format']);
-
 	$field = array(
 		'type'  => 'static',
 		'label' => qa_lang_html('question/ask_follow_from_a'),
 		'value' => $viewer->get_html($followanswer['content'], $followanswer['format'], array('blockwordspreg' => qa_get_block_words_preg())),
 	);
-
 	qa_array_insert($qa_content['form']['fields'], 'title', array('follows' => $field));
 }
 
@@ -549,32 +518,21 @@ if (qa_using_categories() && count($categories)) {
 		'label' => qa_lang_html('question/q_category_label'),
 		'error' => qa_html(@$errors['categoryid']),
 	);
-
 	qa_set_up_category_field($qa_content, $field, 'category', $categories, $in['categoryid'], true, qa_opt('allow_no_sub_category'));
-
-	if (!qa_opt('allow_no_category')) // don't auto-select a category even though one is required
-	{
+	if (!qa_opt('allow_no_category')) {
 		$field['options'][''] = '';
 	}
-
 	qa_array_insert($qa_content['form']['fields'], 'similar', array('category' => $field));
 }
-
 
 if (qa_using_tags()) {
 	$field = array(
 		'error' => qa_html(@$errors['tags']),
 	);
-
-
-
 	qa_set_up_tag_field($qa_content, $field, 'tags', isset($in['tags']) ? $in['tags'] : array(), array(),
 		qa_opt('do_complete_tags') ? array_keys($completetags) : array(), qa_opt('page_size_ask_tags'));
-
 	qa_array_insert($qa_content['form']['fields'], null, array('tags' => $field));
-
 }
-
 
 if ( qa_opt('enable_nsfw') || qa_opt('enable_pposts') ) {
 	$nsfw = '';
@@ -596,7 +554,6 @@ if (!isset($userid)) {
 	qa_set_up_name_field($qa_content, $qa_content['form']['fields'], @$in['name']);
 }
 
-
 if ($captchareason) {
 	require_once QA_INCLUDE_DIR . 'king-app/captcha.php';
 	qa_set_up_captcha_field($qa_content, $qa_content['form']['fields'], @$errors, qa_captcha_reason_note($captchareason));
@@ -612,12 +569,8 @@ if ($captchareason) {
 	$cont2 .= '</div>';
 	$cont2 .= '</div>';
 	$qa_content['custom'] = $cont2;
-
 }
 $qa_content['class']=' ai-create';
 $qa_content['focusid'] = 'ai-box';
 
 return $qa_content;
-/*
-Omit PHP closing tag to help avoid accidental output
- */

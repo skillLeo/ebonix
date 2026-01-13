@@ -61,7 +61,6 @@
 		$port = null;
 
 		if (defined('QA_FINAL_WORDPRESS_INTEGRATE_PATH')) {
-			// Wordpress allows setting port inside DB_HOST constant, like 127.0.0.1:3306
 			$host_and_port = explode(':', $host);
 			if (count($host_and_port) >= 2) {
 				$host = $host_and_port[0];

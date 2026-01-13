@@ -1,3 +1,134 @@
+/* Video positioning */
+.simple-post-video,
+.mslider-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 2;
+}
+
+/* Show video immediately if no thumbnail exists */
+.video-no-thumb + .simple-post-video,
+.video-no-thumb + .mslider-video {
+    opacity: 1;
+    display: block;
+}
+
+/* Hide video by default if thumbnail exists */
+.king-box-bg:not(.video-no-thumb) + .simple-post-video,
+.king-box-bg:not(.video-no-thumb) + .mslider-video {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Show video on hover when thumbnail exists */
+.simple-post:hover .king-box-bg:not(.video-no-thumb) + .simple-post-video,
+.mslider-post:hover .king-box-bg:not(.video-no-thumb) + .mslider-video {
+    opacity: 1;
+}
+
+/* Fade out thumbnail when video plays */
+.simple-post:hover .king-box-bg:not(.video-no-thumb) {
+    opacity: 0.3;
+    transition: opacity 0.3s ease;
+}
+
+/* Placeholder for videos without thumbnails */
+.video-no-thumb {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    position: relative;
+    display: none; /* Hide gradient since video shows */
+}
+
+.video-no-thumb::before {
+    content: "\f04b";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3rem;
+    color: rgba(255, 255, 255, 0.8);
+    z-index: 1;
+}
+
+/* Ensure proper stacking */
+.simple-post,
+.mslider-post {
+    position: relative;
+}
+
+.king-box-bg {
+    position: relative;
+    z-index: 1;
+}
+
+
+
+/* Video hidden by default */
+.simple-post-video,
+.mslider-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 3;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Show video on hover */
+.simple-post:hover .simple-post-video,
+.mslider-post:hover .mslider-video {
+    opacity: 1;
+}
+
+/* Placeholder for videos without thumbnails - ALWAYS VISIBLE */
+.video-no-thumb {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: block !important;
+}
+
+.video-no-thumb::before {
+    content: "\f04b";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3rem;
+    color: rgba(255, 255, 255, 0.8);
+    z-index: 2;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: 0.7; transform: translate(-50%, -50%) scale(1.1); }
+}
+
+/* Fade gradient when video plays */
+.simple-post:hover .video-no-thumb,
+.mslider-post:hover .video-no-thumb {
+    opacity: 0.2;
+}
+
+/* Fade thumbnail when video plays */
+.simple-post:hover .king-box-bg[data-king-img-src],
+.mslider-post:hover .king-box-bg[data-king-img-src] {
+    opacity: 0.3;
+}
+
 body {
   background-color: #f6f7f9;
   margin: 0;

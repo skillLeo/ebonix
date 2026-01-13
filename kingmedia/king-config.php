@@ -14,7 +14,7 @@
 	More about this license: LICENSE.html
 */
 
-	define('QA_MYSQL_HOSTNAME', '127.0.0.1'); // try '127.0.0.1' or 'localhost' if MySQL on same server
+	define('QA_MYSQL_HOSTNAME', '127.0.0.1'); 
 	define('QA_MYSQL_USERNAME', 'root');
 	define('QA_MYSQL_PASSWORD', '');
 	define('QA_MYSQL_DATABASE', 'kingmedia');

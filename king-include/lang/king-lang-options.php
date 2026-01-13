@@ -443,4 +443,11 @@
 		'enable_sdream' => 'Enable Seedream ( 4K ) ( NEW )',
 		'enable_kst' => 'Enable Foxai ( with audio ) ( NEW )',
 		'enable_banana' => 'Enable Google Nano Banana ( NEW )',
+		'enable_decart_vid' => 'Enable Decart Video',
+'enable_decart_img' => 'Enable Decart Image',
+'decart_api' => 'Decart API Key:',
+
+'enable_luma_vid' => 'Enable Luma Video',
+'enable_luma_img' => 'Enable Luma Image',
+'luma_api' => 'Luma API Key:',
 	);

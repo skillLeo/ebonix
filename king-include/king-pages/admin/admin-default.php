@@ -58,8 +58,12 @@
 
 
 //	For non-text options, lists of option types, minima and maxima
-	
+// king-include/king-pages/admin/admin-default.php
 	$optiontype=array(
+		'enable_decart_vid' => 'checkbox',
+'enable_decart_img' => 'checkbox',
+'enable_luma_vid' => 'checkbox',
+'enable_luma_img' => 'checkbox',
 		'ulimit' => 'number',
 		'avatar_message_list_size' => 'number',
 		'avatar_profile_size' => 'number',
@@ -391,59 +395,64 @@
 			$subtitle='admin/general_title';
 			$showoptions=array('site_title', 'site_url', 'neat_urls', 'site_language', 'site_theme', 'site_theme_mobile', 'site_text_direction', 'tags_or_categories', 'site_maintenance');
 			break;
-		case 'ai':
-			$subtitle='admin/ai';
-			$showoptions=array(
-				 'gemini_api', 'king_sd_api', 'king_leo_api', '', 'enable_aivideo', 'enable_kst', 'enable_wan', 'enable_luna', 'enable_pixverse', 'enable_see', 'enable_veo3', 'enable_veo3f', 'enable_luna_img', '', 'enable_askai', 'select_kingask', '', 'king_leo_enable', 'enable_sdn', 'enable_sd', 'sdnsfw', 'enable_flux_pro', 'enable_flux', 'enable_sdream', 'enable_banana', 'enable_imagen4', 'enable_fluxkon', 'enable_realxl', 'ennsfw', 'eprompter', 'oaprompter', 'king_sd_steps', '', 'enable_de', 'enable_de3', '', 'kingai_imgn', 'enprompt', 'eidown', 'ulimits', 'ulimit', 'ailimits', 'plan_1_lmt', 'plan_2_lmt', 'plan_3_lmt', 'plan_4_lmt'
-			);
-			$checkboxtodisplay=array(
-
-				'king_leo_api' => 'option_enable_de || option_enable_de3 && option_king_leo_enable || option_enable_askai',
-				'oaprompter' =>  'option_eprompter && option_king_leo_enable',
-				'sdnsfw' => 'option_king_leo_enable',
-				'ennsfw' => 'option_king_leo_enable',
-				'enable_de' => 'option_king_leo_enable',
-				'enable_de3' => 'option_king_leo_enable',
-				'eprompter' => 'option_king_leo_enable',
-				'king_sd_api'  => 'option_king_leo_enable || option_enable_askai || option_enable_aivideo',
-				'king_sd_steps'  => 'option_king_leo_enable',
-				'enprompt' => 'option_king_leo_enable',
-				'kingai_imgn'  => 'option_king_leo_enable',
-				'kingh_title'  => 'option_king_leo_enable',
-				'kingh_desc'   => 'option_king_leo_enable',
-				'hsubmit'   => 'option_king_leo_enable',
-				'eidown' => 'option_king_leo_enable',
-				'aprvt' => 'option_king_leo_enable',
-				'aupload' => 'option_king_leo_enable',
-				'ulimits' => 'option_king_leo_enable',
-				'ulimit' => 'option_ulimits && option_king_leo_enable',
-				'ailimits' => 'option_king_leo_enable',
-				'plan_1_lmt' => 'option_ailimits && option_king_leo_enable',
-				'plan_2_lmt' => 'option_ailimits && option_king_leo_enable',
-				'plan_3_lmt' => 'option_ailimits && option_king_leo_enable',
-				'plan_4_lmt' => 'option_ailimits && option_king_leo_enable',
-				'enable_sd'  => 'option_king_leo_enable',
-				'enable_flux' => 'option_king_leo_enable',
-				'enable_flux_pro' => 'option_king_leo_enable',
-				'enable_sdream' => 'option_king_leo_enable',
-				'enable_banana' => 'option_king_leo_enable',
-				'enable_imagen'  => 'option_king_leo_enable',
-				'enable_imagen4'  => 'option_king_leo_enable',
-				'enable_fluxkon'  => 'option_king_leo_enable',
-				'enable_sdn'  => 'option_king_leo_enable',
-				'enable_realxl'  => 'option_king_leo_enable',
-				'select_kingask'  => 'option_enable_askai',
-				'enable_wan'  => 'option_enable_aivideo',
-				'enable_luna'  => 'option_enable_aivideo',
-				'enable_veo3'  => 'option_enable_aivideo',
-				'enable_veo3f'  => 'option_enable_aivideo',
-				'gemini_api'  => 'option_enable_veo3 || option_enable_veo3f || option_enable_banana',
-				'enable_luna_img'  => 'option_enable_aivideo ',
-				'enable_see'  => 'option_enable_aivideo',
-				'enable_pixverse'  => 'option_enable_aivideo',
-				'enable_kst'  => 'option_enable_aivideo',
-			);
-			break;			
+			case 'ai':
+				$subtitle='admin/ai';
+				$showoptions=array(
+				 'gemini_api', 'king_sd_api', 'king_leo_api', 'decart_api', '',	'luma_api', '',	'enable_luma_vid', 'enable_luma_img',  'enable_aivideo',  'enable_aivideo', 'enable_kst', 'enable_wan', 'enable_luna', 'enable_pixverse', 'enable_see', 'enable_veo3', 'enable_veo3f', 'enable_luna_img', 'enable_decart_vid', 'enable_decart_img', '', 'enable_askai', 'select_kingask', '', 'king_leo_enable', 'enable_sdn', 'enable_sd', 'sdnsfw', 'enable_flux_pro', 'enable_flux', 'enable_sdream', 'enable_banana', 'enable_imagen4', 'enable_fluxkon', 'enable_realxl', 'ennsfw', 'eprompter', 'oaprompter', 'king_sd_steps', '', 'enable_de', 'enable_de3', '', 'kingai_imgn', 'enprompt', 'eidown', 'ulimits', 'ulimit', 'ailimits', 'plan_1_lmt', 'plan_2_lmt', 'plan_3_lmt', 'plan_4_lmt'
+				);
+				$checkboxtodisplay=array(
+					'luma_api'  => 'option_enable_luma_vid || option_enable_luma_img',
+'enable_luma_vid'  => 'option_enable_aivideo',
+'enable_luma_img'  => 'option_king_leo_enable',
+					'king_leo_api' => 'option_enable_de || option_enable_de3 && option_king_leo_enable || option_enable_askai',
+					'oaprompter' =>  'option_eprompter && option_king_leo_enable',
+					'sdnsfw' => 'option_king_leo_enable',
+					'ennsfw' => 'option_king_leo_enable',
+					'enable_de' => 'option_king_leo_enable',
+					'enable_de3' => 'option_king_leo_enable',
+					'eprompter' => 'option_king_leo_enable',
+					'king_sd_api'  => 'option_king_leo_enable || option_enable_askai || option_enable_aivideo',
+					'king_sd_steps'  => 'option_king_leo_enable',
+					'enprompt' => 'option_king_leo_enable',
+					'kingai_imgn'  => 'option_king_leo_enable',
+					'kingh_title'  => 'option_king_leo_enable',
+					'kingh_desc'   => 'option_king_leo_enable',
+					'hsubmit'   => 'option_king_leo_enable',
+					'eidown' => 'option_king_leo_enable',
+					'aprvt' => 'option_king_leo_enable',
+					'aupload' => 'option_king_leo_enable',
+					'ulimits' => 'option_king_leo_enable',
+					'ulimit' => 'option_ulimits && option_king_leo_enable',
+					'ailimits' => 'option_king_leo_enable',
+					'plan_1_lmt' => 'option_ailimits && option_king_leo_enable',
+					'plan_2_lmt' => 'option_ailimits && option_king_leo_enable',
+					'plan_3_lmt' => 'option_ailimits && option_king_leo_enable',
+					'plan_4_lmt' => 'option_ailimits && option_king_leo_enable',
+					'enable_sd'  => 'option_king_leo_enable',
+					'enable_flux' => 'option_king_leo_enable',
+					'enable_flux_pro' => 'option_king_leo_enable',
+					'enable_sdream' => 'option_king_leo_enable',
+					'enable_banana' => 'option_king_leo_enable',
+					'enable_imagen'  => 'option_king_leo_enable',
+					'enable_imagen4'  => 'option_king_leo_enable',
+					'enable_fluxkon'  => 'option_king_leo_enable',
+					'enable_sdn'  => 'option_king_leo_enable',
+					'enable_realxl'  => 'option_king_leo_enable',
+					'select_kingask'  => 'option_enable_askai',
+					'enable_wan'  => 'option_enable_aivideo',
+					'enable_luna'  => 'option_enable_aivideo',
+					'enable_veo3'  => 'option_enable_aivideo',
+					'enable_veo3f'  => 'option_enable_aivideo',
+					'gemini_api'  => 'option_enable_veo3 || option_enable_veo3f || option_enable_banana || option_enable_imagen4',
+					'enable_luna_img'  => 'option_enable_aivideo ',
+					'enable_see'  => 'option_enable_aivideo',
+					'enable_pixverse'  => 'option_enable_aivideo',
+					'enable_kst'  => 'option_enable_aivideo',
+					'decart_api'  => 'option_enable_decart_vid || option_enable_decart_img',
+					'enable_decart_vid'  => 'option_enable_aivideo',
+					'enable_decart_img'  => 'option_king_leo_enable',
+				);
+				break;		
 		case 'emails':
 			$subtitle='admin/emails_title';
 			$showoptions=array(

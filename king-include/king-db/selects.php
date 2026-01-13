@@ -1159,27 +1159,70 @@ function get_avatar($userblobid, $size='200', $url=null, $class='king-avatar') {
 }
 
 function get_simple_post($post) {
-	$furl=qa_path_absolute(qa_q_request($post['postid'], $post['title']), null, null);
-	$img = king_get_uploads($post['content']);
+	$furl = qa_path_absolute(qa_q_request($post['postid'], $post['title']), null, null);
+	$media = king_get_uploads($post['content']);
+	
 	$html = '<div class="simple-posts">';
-	$html .= '<a href="'.qa_html($furl).'">';
+	$html .= '<a href="' . qa_html($furl) . '">';
 	$html .= '<div class="simple-post">';
-	if ($img) {
-		$html .= '<div class="king-box-bg" data-king-img-src="'.$img['furl'].'"></div>';
+	
+	$postformat = $post['postformat'];
+	
+	// Check if it's a VIDEO POST
+	if ($postformat === 'V') {
+		$extra = qa_db_postmeta_get($post['postid'], 'qa_q_extra');
+		
+		if (is_numeric($extra)) {
+			$video = king_get_uploads($extra);
+			
+			// Check if thumbnail exists
+			if ($media && isset($media['furl'])) {
+				// Render thumbnail as background
+				$html .= '<div class="king-box-bg" data-king-img-src="' . $media['furl'] . '"></div>';
+			} else {
+				// No thumbnail - show video poster/placeholder
+				$html .= '<div class="king-box-bg video-no-thumb"></div>';
+			}
+			
+			// Always render video element
+			if ($video && isset($video['furl'])) {
+				$html .= '<video class="simple-post-video" muted loop playsinline preload="metadata" poster="">';
+				$html .= '<source src="' . qa_html($video['furl']) . '" type="video/mp4">';
+				$html .= '</video>';
+			}
+		} else {
+			// Fallback: just show thumbnail if it exists
+			if ($media && isset($media['furl'])) {
+				$html .= '<div class="king-box-bg" data-king-img-src="' . $media['furl'] . '"></div>';
+			} else {
+				$html .= '<div class="king-box-bg"></div>';
+			}
+		}
+	} elseif ($media) {
+		$format = strtolower($media['format']);
+		
+		// Direct video file (not a video post)
+		if (in_array($format, array('mp4', 'webm', 'ogg', 'mov', 'avi'))) {
+			$html .= '<video class="simple-post-video" muted loop playsinline preload="metadata">';
+			$html .= '<source src="' . qa_html($media['furl']) . '" type="video/' . qa_html($format) . '">';
+			$html .= '</video>';
+		} else {
+			// Image
+			$html .= '<div class="king-box-bg" data-king-img-src="' . $media['furl'] . '"></div>';
+		}
 	} else {
 		$html .= '<div class="king-box-bg"></div>';
 	}
 	
 	$html .= '</div>';
-	$html .= '</a> ';
+	$html .= '</a>';
 	$html .= '<div class="simple-post-content">';
-	$html .= '<a href="'.qa_html($furl).'" class="simple-post-title">'.qa_html($post['title']).'</a>';
-
+	$html .= '<a href="' . qa_html($furl) . '" class="simple-post-title">' . qa_html($post['title']) . '</a>';
 	$html .= '</div>';
 	$html .= '<div class="simple-post-meta">';
-	$html .= '<span><i class="fa fa-eye" aria-hidden="true"></i> '.qa_html($post['views']).' </span>';
-	$html .= '<span><i class="fa fa-comment" aria-hidden="true"></i> '.qa_html($post['acount']).'</span>';
-	$html .= '<span><i class="fas fa-chevron-up"></i> '.qa_html($post['netvotes']).'</span>';
+	$html .= '<span><i class="fa fa-eye" aria-hidden="true"></i> ' . qa_html($post['views']) . ' </span>';
+	$html .= '<span><i class="fa fa-comment" aria-hidden="true"></i> ' . qa_html($post['acount']) . '</span>';
+	$html .= '<span><i class="fas fa-chevron-up"></i> ' . qa_html($post['netvotes']) . '</span>';
 	$html .= '</div>';
 	$html .= '</div>';
 
@@ -1187,23 +1230,59 @@ function get_simple_post($post) {
 }
 
 function get_simple_minipost($post) {
-	$furl=qa_path_absolute(qa_q_request($post['postid'], $post['title']), null, null);
-	$img = king_get_uploads($post['content']);
+	$furl = qa_path_absolute(qa_q_request($post['postid'], $post['title']), null, null);
+	$media = king_get_uploads($post['content']);
+	
 	$html = '<div class="mslider-posts">';
-	$html .= '<a class="mslider-post" href="'.qa_html($furl).'">';
+	$html .= '<a class="mslider-post" href="' . qa_html($furl) . '">';
 
-	if ($img) {
-		$html .= '<div class="king-box-bg" data-king-img-src="'.$img['furl'].'"></div>';
+	$postformat = $post['postformat'];
+	
+	// Check if it's a VIDEO POST
+	if ($postformat === 'V') {
+		$extra = qa_db_postmeta_get($post['postid'], 'qa_q_extra');
+		
+		if (is_numeric($extra)) {
+			$video = king_get_uploads($extra);
+			
+			// Show thumbnail if exists
+			if ($media && isset($media['furl'])) {
+				$html .= '<div class="king-box-bg" data-king-img-src="' . $media['furl'] . '"></div>';
+			} else {
+				$html .= '<div class="king-box-bg video-no-thumb"></div>';
+			}
+			
+			// Show video
+			if ($video && isset($video['furl'])) {
+				$html .= '<video class="mslider-video" muted loop playsinline preload="metadata">';
+				$html .= '<source src="' . qa_html($video['furl']) . '" type="video/mp4">';
+				$html .= '</video>';
+			}
+		} else {
+			if ($media && isset($media['furl'])) {
+				$html .= '<div class="king-box-bg" data-king-img-src="' . $media['furl'] . '"></div>';
+			} else {
+				$html .= '<div class="king-box-bg"></div>';
+			}
+		}
+	} elseif ($media) {
+		$format = strtolower($media['format']);
+		
+		if (in_array($format, array('mp4', 'webm', 'ogg', 'mov', 'avi'))) {
+			$html .= '<video class="mslider-video" muted loop playsinline preload="metadata">';
+			$html .= '<source src="' . qa_html($media['furl']) . '" type="video/' . qa_html($format) . '">';
+			$html .= '</video>';
+		} else {
+			$html .= '<div class="king-box-bg" data-king-img-src="' . $media['furl'] . '"></div>';
+		}
 	} else {
 		$html .= '<div class="king-box-bg"></div>';
 	}
-	
 
-	$html .= '</a> ';
+	$html .= '</a>';
 	$html .= '<div class="mslider-post-content">';
-	$html .= '<div class="mslider-post-meta">' .get_post_format($post['postformat']) . '</div>';
-	$html .= '<a href="'.qa_html($furl).'" class="mslider-title">'.qa_html($post['title']).'</a>';
-
+	$html .= '<div class="mslider-post-meta">' . get_post_format($post['postformat']) . '</div>';
+	$html .= '<a href="' . qa_html($furl) . '" class="mslider-title">' . qa_html($post['title']) . '</a>';
 	$html .= '</div>';
 	$html .= '</div>';
 
